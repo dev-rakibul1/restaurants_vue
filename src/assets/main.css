@@ -1,0 +1,10 @@
+@import "./base.css";
+
+.container {
+  width: 1170px;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 15px;
+  padding-left: 15px;
+}
