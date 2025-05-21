@@ -30,11 +30,7 @@
     <div class="flex flex-1 flex-col lg:flex-row home__layout__parent">
       <!-- Sidebar (1st child) -->
       <aside
-        :class="[
-          'bg-gray-100 p-4',
-          showSidebar ? 'block' : 'hidden',
-          'lg:block lg:w-1/4',
-        ]"
+        :class="['p-4', showSidebar ? 'block' : 'hidden', 'lg:block lg:w-1/4']"
       >
         <h3
           class="text-left"
@@ -43,7 +39,9 @@
           Menu
         </h3>
         <ul class="space-y-9 home__layout__menu">
-          <li class="p-2 hover:bg-gray-200"><a href="#">What's new</a></li>
+          <li class="p-2 hover:bg-gray-200">
+            <a href="#category__one">What's new</a>
+          </li>
           <li class="p-2 hover:bg-gray-200"><a href="#">Новинки</a></li>
           <li class="p-2 hover:bg-gray-200"><a href="#">Соло баскеты</a></li>
           <li class="p-2 hover:bg-gray-200"><a href="#">Комбо</a></li>
@@ -60,23 +58,44 @@
       </aside>
 
       <!-- Main content (2nd child) -->
-      <main class="w-full lg:w-1/2 p-4 bg-white">
-        <h1 class="text-xl font-bold mb-4">Main Content</h1>
-        <p>This section takes 50% of the width on large screens.</p>
+      <main class="w-full lg:w-1/2 p-4">
+        <!-- Home top banner -->
+        <HomeTopBanner />
+
+        <div id="category__one" class="mt-10">
+          <CategoryOneView />
+        </div>
       </main>
 
       <!-- Right sidebar (3rd child) — hidden on small/medium -->
-      <aside class="hidden lg:block lg:w-1/4 bg-gray-50 p-4">
-        <h2 class="text-lg font-semibold mb-2">Right Panel</h2>
-        <p>Visible only on large screens and up.</p>
+      <aside
+        class="hidden lg:block lg:w-1/4 bg-white mb-10 ml-10 mr-10 rounded-3xl max__height p-5"
+      >
+        <h2 class="text-2xl font-semibold p-5">Cart</h2>
+        <div class="flex items-center justify-center h-full">
+          <UserCard />
+        </div>
+        <!-- 
+        <div>
+          <hr />
+        </div> -->
       </aside>
     </div>
   </div>
 </template>
 
 <script>
+import CategoryOneView from "../products/categories/CateOneView.vue";
+import UserCard from "../products/userCard/AddToCard.vue";
+import HomeTopBanner from "./homeTopBanner/HomeTopBanner.vue";
+
 export default {
   name: "HomeLayout",
+  components: {
+    HomeTopBanner,
+    CategoryOneView,
+    UserCard,
+  },
   data() {
     return {
       showSidebar: false,
@@ -103,5 +122,9 @@ export default {
 }
 .back__icon_wrap {
   padding: 15px;
+}
+
+.max__height {
+  height: 75vh;
 }
 </style>

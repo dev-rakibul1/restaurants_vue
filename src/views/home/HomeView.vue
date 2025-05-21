@@ -2,9 +2,13 @@
   <div class="container">
     <!-- Home lauout -->
     <HomeLayout />
+
+    <!-- App store -->
+    <AppStore />
   </div>
 </template>
 <script>
+import AppStore from "@/components/home/appStore/AppStore.vue";
 import HomeLayout from "@/components/home/HomeLayout.vue";
 
 export default {
@@ -12,6 +16,7 @@ export default {
 
   components: {
     HomeLayout,
+    AppStore,
   },
 };
 </script>
