@@ -33,10 +33,12 @@
       <aside
         :class="['p-4', showSidebar ? 'block' : 'hidden', 'lg:block lg:w-1/5']"
       >
-        <div class="sticky top-4">
-          <h3 class="text-left font-semibold mb-4">Menu</h3>
+        <div class="sticky top-4" style="margin-top: 30px">
+          <h3 class="text-left font-semibold mb-4" style="padding: 10px">
+            Menu
+          </h3>
           <ul class="space-y-4 home__layout__menu">
-            <li class="p-2 hover:bg-gray-200">
+            <li class="p-2 hover:bg-gray-200 font-semibold">
               <a href="#free__delivery">What's new</a>
             </li>
             <li class="p-2 hover:bg-gray-200">
@@ -123,6 +125,7 @@
           </div>
 
           <div
+            v-if="store.products.length"
             class="p-5"
             style="
               border-top: 1px solid #ddd;
@@ -212,7 +215,7 @@ export default {
 }
 
 .home__layout__menu li {
-  margin-top: 15px;
+  margin-top: 11px;
   padding: 10px;
   border-radius: 7px;
   cursor: pointer;
@@ -229,7 +232,9 @@ export default {
   top: 0;
 }
 .back__icon_wrap {
-  padding: 15px;
+  padding: 10px 35px;
+  background: #fff;
+  border-radius: 10px;
 }
 
 .max__height {

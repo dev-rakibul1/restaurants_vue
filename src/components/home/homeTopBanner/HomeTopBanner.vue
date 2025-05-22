@@ -10,7 +10,7 @@
       >
         <!-- Content -->
         <div class="relative z-10 text-white kfc__malika">
-          <h2 class="text-2xl md:text-4xl font-bold mb-2">KFC Malika</h2>
+          <h2 class="text-2xl md:text-5xl font-bold mb-2">KFC Malika</h2>
           <div class="flex items-center space-x-2 gap-4 mt-10">
             <div
               class="bg-white text-black px-2 py-1 rounded-lg text-sm flex items-center gap-4 kfc__rating"
@@ -81,7 +81,7 @@ export default {
   background: #000000;
   background: linear-gradient(
     17deg,
-    rgba(0, 0, 0, 0.63) 17%,
+    rgba(0, 0, 0, 0.7) 33%,
     rgba(237, 221, 83, 0) 100%
   );
   opacity: 0.5;
