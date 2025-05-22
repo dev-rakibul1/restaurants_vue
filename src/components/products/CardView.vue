@@ -17,6 +17,7 @@
     <button
       class="add__button"
       @click="handleAddToCard(product)"
+      :disabled="!product.status"
       :class="[
         'w-full py-2 rounded-lg font-medium flex items-center justify-center',
         product?.status && product?.isStock

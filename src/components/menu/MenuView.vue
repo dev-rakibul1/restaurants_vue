@@ -4,8 +4,63 @@
     <div
       v-if="isMenuOpen"
       @click="toggleMenu"
-      class="fixed inset-0 bg-opacity-50 z-30 lg:hidden overly__bg"
+      class="fixed inset-0 bg-opacity-50 z-50 lg:hidden overly__bg w-full"
     ></div>
+
+    <!-- Overlay for card sidebar -->
+    <div
+      v-if="isCardSidebarOpen"
+      class="fixed inset-0 bg-opacity-50 z-40 card__overly"
+      style="z-index: 5000"
+      @click="closeCardSidebar"
+    ></div>
+
+    <!-- Card Sidebar -->
+    <div
+      style="z-index: 5001"
+      v-if="isCardSidebarOpen"
+      ref="cardSidebar"
+      class="fixed p-5 right-0 top-0 w-64 h-full bg-white shadow-lg z-50 transition-transform duration-300"
+    >
+      <h2 class="text-xl font-bold mb-4">My Cart</h2>
+      <!-- view card -->
+
+      <div class="h-screen overflow-y-scroll">
+        <!-- Display cart items -->
+
+        <div
+          v-if="store.products.length === 0"
+          class="flex items-center justify-center h-[50vh] text-gray-500"
+        >
+          Cart is empty!
+        </div>
+        <div v-else>
+          <div>
+            <div
+              class="p-5"
+              style="
+                border-top: 1px solid #ddd;
+                margin-top: 10px;
+                padding: 15px 0;
+              "
+            >
+              <p class="text-xs">Quantity: {{ " " }} {{ totalQuantity }}</p>
+              <p class="text-xs">
+                Total Amount: {{ " " }} {{ formattedTotalAmount }} {{ " " }}₸
+              </p>
+            </div>
+
+            <AddToCard
+              v-for="product in store.products"
+              :key="product.id"
+              :product="product"
+            />
+          </div>
+        </div>
+
+        <!-- <UserCard /> -->
+      </div>
+    </div>
 
     <!-- Main Nav Container -->
     <div
@@ -26,7 +81,6 @@
         <div class="hidden lg:flex justify-between items-center w-full px-8">
           <!-- Left section -->
           <div class="flex flex-wrap items-center gap-4">
-            <!-- Search Box -->
             <div class="relative">
               <input
                 type="search"
@@ -40,7 +94,6 @@
               />
             </div>
 
-            <!-- Delivery Button -->
             <button
               class="flex items-center bg-yellow-300 hover:bg-yellow-300 text-black font-semibold rounded-2xl transition duration-200"
               style="padding: 13px 17px"
@@ -70,7 +123,7 @@
           </div>
         </div>
 
-        <!-- Hamburger Icon (Mobile Only) -->
+        <!-- Hamburger Icon -->
         <div class="lg:hidden">
           <button @click="toggleMenu">
             <svg
@@ -114,7 +167,6 @@
       :class="{ '-translate-x-full': !isMenuOpen, 'translate-x-0': isMenuOpen }"
     >
       <div class="p-6 space-y-6">
-        <!-- Search -->
         <div class="relative mt-10">
           <input
             type="search"
@@ -128,17 +180,17 @@
           />
         </div>
 
-        <!-- Delivery -->
         <button
-          class="mt-10 flex items-center bg-yellow-300 text-black font-semibold rounded-2xl transition duration-200 w-full justify-center"
+          class="mt-10 flex items-center bg-yellow-300 text-black text-sm md:text-xl font-semibold rounded-2xl transition duration-200 w-full justify-center"
           style="padding: 13px 17px"
         >
           <img src="../../assets/images/send.png" class="w-5 h-5 mr-2" alt="" />
           Enter delivery address
         </button>
 
-        <!-- Language -->
-        <div class="flex items-center text-sm text-black gap-2 mt-10">
+        <div
+          class="flex items-center text-sm text-black gap-2 mt-10 cursor-pointer"
+        >
           <img
             src="../../assets/images/world.png"
             alt="World"
@@ -147,35 +199,90 @@
           <p>English</p>
         </div>
 
-        <!-- Login -->
-        <button class="login__btn w-full mt-10">Log in</button>
+        <button
+          @click.stop="toggleCardSidebar"
+          class="card__btn bg-gray-300 rounded-xl w-full mt-10 flex items-center justify-center cursor-pointer"
+        >
+          <img
+            src="../../assets/images/shoping.png"
+            class="w-4 h-4 mr-5 cursor-pointer"
+            alt=""
+          />
+          Card
+          <p class="card__bage">{{ totalQuantity || 0 }}</p>
+        </button>
+
+        <button class="login__btn w-full mt-10 cursor-pointer">Log in</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import AddToCard from "../../addToCard/AddToCard.vue";
+import { useTaskStore } from "@/stores/taskStore";
+import { computed } from "vue";
+
 export default {
   name: "MenuView",
+
+  components: {
+    AddToCard,
+  },
+
   data() {
     return {
       isMenuOpen: false,
       isScrolled: false,
+      isCardSidebarOpen: false,
     };
   },
   methods: {
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
     },
+    toggleCardSidebar() {
+      this.isCardSidebarOpen = !this.isCardSidebarOpen;
+    },
+    closeCardSidebar() {
+      this.isCardSidebarOpen = false;
+    },
     handleScroll() {
       this.isScrolled = window.scrollY > 10;
+    },
+    handleClickOutside(event) {
+      const sidebar = this.$refs.cardSidebar;
+      if (sidebar && !sidebar.contains(event.target)) {
+        this.closeCardSidebar();
+      }
     },
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
+    document.addEventListener("click", this.handleClickOutside);
   },
   beforeDestroy() {
     window.removeEventListener("scroll", this.handleScroll);
+    document.removeEventListener("click", this.handleClickOutside);
+  },
+
+  setup() {
+    const store = useTaskStore();
+    const formattedTotalAmount = computed(() => {
+      if (store.totalAmount === undefined || store.totalAmount === null) {
+        return "0.00"; // Handle cases where totalAmount is null or undefined
+      }
+      return Number(store.totalAmount).toFixed(2);
+    });
+
+    const totalQuantity = computed(() => {
+      return store.products.reduce(
+        (total, item) => total + (item.quantity || 0),
+        0
+      );
+    });
+
+    return { store, formattedTotalAmount, totalQuantity };
   },
 };
 </script>
@@ -195,17 +302,22 @@ export default {
   transform: translateY(-50%);
   pointer-events: none;
 }
+.card__btn {
+  padding: 10px 20px;
+  background: #ddd;
+  border-radius: 12px;
+  position: relative;
+}
 .login__btn {
   padding: 10px 20px;
   display: inline-block;
   background: #ddd;
   border-radius: 12px;
 }
+.card__overly,
 .overly__bg {
-  background: #0000005b;
+  background: #00000070;
 }
-
-/* Sticky Navbar on Scroll */
 .main-nav-wrapper.scrolled {
   position: fixed;
   top: 0;
@@ -215,15 +327,27 @@ export default {
   z-index: 50;
   transition: all 0.5s ease;
   border: none;
-
   box-shadow: 0 8px 20px rgba(117, 115, 111, 0.2);
 }
-
 .mobile__menu {
   z-index: 99;
   padding: 15px;
 }
-
+.card__bage {
+  border: 1px solid #ffdf20;
+  position: absolute;
+  top: 0;
+  right: 50%;
+  margin-right: -50px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  border-radius: 100%;
+  background: #ffdf20;
+}
 .main-nav-wrapper {
   position: fixed;
   z-index: 98;
