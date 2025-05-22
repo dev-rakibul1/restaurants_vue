@@ -1,5 +1,8 @@
 <template>
-  <div class="product__card">
+  <div
+    class="product__card"
+    :class="{ 'opacity-50 pointer-events-none': product.status === false }"
+  >
     <div>
       <img :src="product.image" alt="" />
     </div>
@@ -10,7 +13,15 @@
       </h3>
       <p class="product__des">{{ product.des }}</p>
     </div>
-    <button class="add__button" @click="$emit('add-to-cart')">+ Add</button>
+
+    <button
+      class="add__button"
+      :disabled="product.status === false"
+      @click="$emit('add-to-cart')"
+    >
+      <span class="card__plus" v-if="product.status">+</span>
+      {{ product.status ? "Add" : "Out of Stock" }}
+    </button>
   </div>
 </template>
 
@@ -24,6 +35,7 @@ export default {
       default: () => ({
         year: "1990T",
         title: "Краны Мастер Острый",
+        status: true, // default true
       }),
     },
   },
@@ -37,10 +49,10 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-width: 300px;
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  max-width: 100%;
   flex-direction: column;
   background: #fff;
+  transition: opacity 0.3s ease;
 }
 
 .product__header {
@@ -54,24 +66,28 @@ export default {
   margin-bottom: 4px;
 }
 
-.product__title {
-  /* font-size: 16px;
-  font-weight: bold;
-  margin: 0; */
-}
-
 .add__button {
   background-color: #ebeaea;
   width: 100%;
   padding: 6px 12px;
   border-radius: 10px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 400;
   transition: all 0.2s;
   margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
 }
 
-/* .add__button:hover {
-  color: white;
-} */
+.add__button:disabled {
+  cursor: not-allowed;
+  background-color: #ccc;
+  color: #555;
+}
+
+.card__plus {
+  font-size: 20px;
+}
 </style>

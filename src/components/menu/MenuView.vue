@@ -212,13 +212,25 @@ export default {
   left: 0;
   width: 100%;
   background: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   z-index: 50;
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
+  border: none;
+
+  box-shadow: 0 8px 20px rgba(117, 115, 111, 0.2);
 }
 
 .mobile__menu {
   z-index: 99;
   padding: 15px;
+}
+
+.main-nav-wrapper {
+  position: fixed;
+  z-index: 98;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: #fff;
 }
 </style>

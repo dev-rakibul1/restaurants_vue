@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h2 class="font-semibold text-2xl md:text-3xl">Новинки</h2>
+  <div style="padding-top: 80px">
+    <h2 class="font-semibold text-2xl md:text-3xl">Дополнительно</h2>
 
     <div
       class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4"
@@ -19,13 +19,13 @@ import CardView from "../CardView.vue";
 import { products as allProducts } from "../../../utils/global.js";
 
 export default {
-  name: "CategoryOneView",
+  name: "CategoryTenView",
   components: {
     CardView,
   },
   data() {
     return {
-      category: "p-1",
+      category: "p-10",
     };
   },
   computed: {

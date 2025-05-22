@@ -71,18 +71,18 @@ export default {
 }
 .footer__content li a {
   font-size: 12px;
-  color: rgb(92, 92, 92);
+  color: rgb(156, 156, 156);
   transition: all 0.5s;
 }
 
 .footer__copy_text {
   font-size: 12px;
-  color: rgb(92, 92, 92);
+  color: rgb(156, 156, 156);
   transition: all 0.5s;
 }
 
 .footer__content li:hover a {
-  color: rgb(145, 145, 145);
+  color: rgb(189, 189, 189);
 }
 
 .footer__title {
@@ -94,7 +94,7 @@ export default {
   height: 1px;
   display: block;
   background: rgb(204, 204, 204);
-  margin-top: 90px;
+  margin-top: 50px;
 }
 
 .footer__copy__wrap {

@@ -4,10 +4,11 @@
     <div class="flex items-center justify-between min-h-[50px]">
       <button class="flex items-center cursor-pointer back__icon_wrap">
         <span>
+          <!-- Back Icon SVG -->
           <svg
             fill="#000000"
-            width="800px"
-            height="800px"
+            width="24"
+            height="24"
             viewBox="0 0 24 24"
             xmlns="http://www.w3.org/2000/svg"
           >
@@ -16,7 +17,7 @@
             />
           </svg>
         </span>
-        <span class="back__icon">All resturants</span>
+        <span class="back__icon">All restaurants</span>
       </button>
       <button
         @click="showSidebar = !showSidebar"
@@ -27,58 +28,78 @@
     </div>
 
     <!-- Parent container -->
-    <div class="flex flex-1 flex-col lg:flex-row home__layout__parent">
+    <div class="flex flex-1 flex-col lg:flex-row gap-4">
       <!-- Sidebar (1st child) -->
       <aside
         :class="['p-4', showSidebar ? 'block' : 'hidden', 'lg:block lg:w-1/4']"
       >
-        <h3
-          class="text-left"
-          style="margin: 15px 0; padding: 15px; font-weight: 600"
-        >
-          Menu
-        </h3>
-        <ul class="space-y-9 home__layout__menu">
-          <li class="p-2 hover:bg-gray-200">
-            <a href="#category__one">What's new</a>
-          </li>
-          <li class="p-2 hover:bg-gray-200"><a href="#">Новинки</a></li>
-          <li class="p-2 hover:bg-gray-200"><a href="#">Соло баскеты</a></li>
-          <li class="p-2 hover:bg-gray-200"><a href="#">Комбо</a></li>
-          <li class="p-2 hover:bg-gray-200"><a href="#">Боксы</a></li>
-          <li class="p-2 hover:bg-gray-200">
-            <a href="#">Бургеры и сэндвичи</a>
-          </li>
-          <li class="p-2 hover:bg-gray-200"><a href="#">Комбо баскеты</a></li>
-          <li class="p-2 hover:bg-gray-200"><a href="#">Сочная курочка</a></li>
-          <li class="p-2 hover:bg-gray-200"><a href="#">Снэки</a></li>
-          <li class="p-2 hover:bg-gray-200"><a href="#">Напитки</a></li>
-          <li class="p-2 hover:bg-gray-200"><a href="#">Дополнительно</a></li>
-        </ul>
+        <div class="sticky top-4">
+          <h3 class="text-left font-semibold mb-4">Menu</h3>
+          <ul class="space-y-4 home__layout__menu">
+            <li class="p-2 hover:bg-gray-200">
+              <a href="#free__delivery">What's new</a>
+            </li>
+            <li class="p-2 hover:bg-gray-200">
+              <a href="#category__one">Новинки</a>
+            </li>
+            <li class="p-2 hover:bg-gray-200">
+              <a href="#category__two">Соло баскеты</a>
+            </li>
+            <li class="p-2 hover:bg-gray-200">
+              <a href="#category__three">Комбо</a>
+            </li>
+            <li class="p-2 hover:bg-gray-200">
+              <a href="#category__four">Боксы</a>
+            </li>
+            <li class="p-2 hover:bg-gray-200">
+              <a href="#category__five">Бургеры и сэндвичи</a>
+            </li>
+            <li class="p-2 hover:bg-gray-200">
+              <a href="#category__six">Комбо баскеты</a>
+            </li>
+            <li class="p-2 hover:bg-gray-200">
+              <a href="#category__seven">Сочная курочка</a>
+            </li>
+            <li class="p-2 hover:bg-gray-200">
+              <a href="#category__eight">Снэки</a>
+            </li>
+            <li class="p-2 hover:bg-gray-200">
+              <a href="#category__nine">Напитки</a>
+            </li>
+            <li class="p-2 hover:bg-gray-200">
+              <a href="#category__ten">Дополнительно</a>
+            </li>
+          </ul>
+        </div>
       </aside>
 
       <!-- Main content (2nd child) -->
       <main class="w-full lg:w-1/2 p-4">
-        <!-- Home top banner -->
+        <!-- Top banner -->
         <HomeTopBanner />
 
-        <div id="category__one" class="mt-10">
-          <CategoryOneView />
-        </div>
+        <!-- free delivery -->
+        <div id="free__delivery" class="mt-10"><FreeDelivery /></div>
+        <div id="category__one" class="mt-10"><CategoryOneView /></div>
+        <div id="category__two" class="mt-10"><CategoryTwoView /></div>
+        <div id="category__three" class="mt-10"><CategoryThreeView /></div>
+        <div id="category__four" class="mt-10"><CategoryFourView /></div>
+        <div id="category__five" class="mt-10"><CategoryFiveView /></div>
+        <div id="category__six" class="mt-10"><CategorySixView /></div>
+        <div id="category__seven" class="mt-10"><CategorySevenView /></div>
+        <div id="category__eight" class="mt-10"><CategoryEightView /></div>
+        <div id="category__nine" class="mt-10"><CategoryNineView /></div>
+        <div id="category__ten" class="mt-10"><CategoryTenView /></div>
       </main>
 
-      <!-- Right sidebar (3rd child) — hidden on small/medium -->
-      <aside
-        class="hidden lg:block lg:w-1/4 bg-white mb-10 ml-10 mr-10 rounded-3xl max__height p-5"
-      >
-        <h2 class="text-2xl font-semibold p-5">Cart</h2>
-        <div class="flex items-center justify-center h-full">
-          <UserCard />
+      <!-- Right sidebar (3rd child) -->
+      <aside class="hidden lg:block lg:w-1/4">
+        <div class="sticky top-4 bg-white rounded-3xl p-5">
+          <h2 class="text-2xl font-semibold mb-4">Cart</h2>
+          <div class="flex items-center justify-center h-[60vh]">
+            <UserCard />
+          </div>
         </div>
-        <!-- 
-        <div>
-          <hr />
-        </div> -->
       </aside>
     </div>
   </div>
@@ -86,6 +107,16 @@
 
 <script>
 import CategoryOneView from "../products/categories/CateOneView.vue";
+import CategoryFourView from "../products/categories/CateFourView.vue";
+import CategoryFiveView from "../products/categories/CateFiveView.vue";
+import CategoryThreeView from "../products/categories/CateThreeView.vue";
+import CategorySixView from "../products/categories/CateSixView.vue";
+import CategorySevenView from "../products/categories/CateSevenView.vue";
+import CategoryEightView from "../products/categories/CateEightView.vue";
+import CategoryNineView from "../products/categories/CateNineView.vue";
+import CategoryTwoView from "../products/categories/CateTwoView.vue";
+import FreeDelivery from "../products/categories/FreeDelivery.vue";
+import CategoryTenView from "../products/categories/CateTenView.vue";
 import UserCard from "../products/userCard/AddToCard.vue";
 import HomeTopBanner from "./homeTopBanner/HomeTopBanner.vue";
 
@@ -94,7 +125,17 @@ export default {
   components: {
     HomeTopBanner,
     CategoryOneView,
+    CategoryTwoView,
+    CategoryThreeView,
+    CategoryFourView,
+    CategoryFiveView,
+    CategorySixView,
+    CategorySevenView,
+    CategoryEightView,
+    CategoryNineView,
     UserCard,
+    CategoryTenView,
+    FreeDelivery,
   },
   data() {
     return {
@@ -114,6 +155,12 @@ export default {
   padding: 10px;
   border-radius: 7px;
   cursor: pointer;
+}
+
+.home__layout__menu li a {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .home__layout__parent {

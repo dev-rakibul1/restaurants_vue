@@ -6,7 +6,7 @@
     </nav>
 
     <!-- main area -->
-    <main>
+    <main style="margin-top: 150px">
       <router-view></router-view>
     </main>
 
