@@ -31,7 +31,7 @@
     <div class="flex flex-1 flex-col lg:flex-row gap-4">
       <!-- Sidebar (1st child) -->
       <aside
-        :class="['p-4', showSidebar ? 'block' : 'hidden', 'lg:block lg:w-1/4']"
+        :class="['p-4', showSidebar ? 'block' : 'hidden', 'lg:block lg:w-1/5']"
       >
         <div class="sticky top-4">
           <h3 class="text-left font-semibold mb-4">Menu</h3>
@@ -74,7 +74,7 @@
       </aside>
 
       <!-- Main content (2nd child) -->
-      <main class="w-full lg:w-1/2 p-4">
+      <main class="w-full lg:w-3/5 p-4">
         <!-- Top banner -->
         <HomeTopBanner />
 
@@ -93,11 +93,47 @@
       </main>
 
       <!-- Right sidebar (3rd child) -->
-      <aside class="hidden lg:block lg:w-1/4">
-        <div class="sticky top-4 bg-white rounded-3xl p-5">
-          <h2 class="text-2xl font-semibold mb-4">Cart</h2>
-          <div class="flex items-center justify-center h-[60vh]">
-            <UserCard />
+      <aside class="hidden lg:block lg:w-1/5">
+        <div class="sticky top-4 bg-white rounded-3xl">
+          <h2 class="text-2xl font-semibold mb-4" style="padding: 10px 25px">
+            Cart
+          </h2>
+
+          <div
+            class="flex items-center justify-center h-[60vh] overflow-y-scroll"
+          >
+            <!-- Display cart items -->
+
+            <div
+              v-if="store.products.length === 0"
+              class="flex items-center justify-center"
+              style="height: 20vh"
+            >
+              <UserCard />
+            </div>
+            <div v-else>
+              <AddToCard
+                v-for="product in store.products"
+                :key="product.id"
+                :product="product"
+              />
+            </div>
+
+            <!-- <UserCard /> -->
+          </div>
+
+          <div
+            class="p-5"
+            style="
+              border-top: 1px solid #ddd;
+              margin-top: 10px;
+              padding: 15px 0;
+            "
+          >
+            <p class="text-xs">Quantity: {{ " " }} {{ totalQuantity }}</p>
+            <p class="text-xs">
+              Total Amount: {{ " " }} {{ formattedTotalAmount }} {{ " " }}₸
+            </p>
           </div>
         </div>
       </aside>
@@ -117,8 +153,13 @@ import CategoryNineView from "../products/categories/CateNineView.vue";
 import CategoryTwoView from "../products/categories/CateTwoView.vue";
 import FreeDelivery from "../products/categories/FreeDelivery.vue";
 import CategoryTenView from "../products/categories/CateTenView.vue";
-import UserCard from "../products/userCard/AddToCard.vue";
+import UserCard from "../products/userCard/UserCard.vue";
 import HomeTopBanner from "./homeTopBanner/HomeTopBanner.vue";
+import AddToCard from "../../addToCard/AddToCard.vue";
+
+import { useTaskStore } from "@/stores/taskStore";
+import { computed } from "vue";
+// import AddCard from "../addCard/AddCard.vue";
 
 export default {
   name: "HomeLayout",
@@ -136,11 +177,31 @@ export default {
     UserCard,
     CategoryTenView,
     FreeDelivery,
+    AddToCard,
   },
   data() {
     return {
       showSidebar: false,
     };
+  },
+
+  setup() {
+    const store = useTaskStore();
+    const formattedTotalAmount = computed(() => {
+      if (store.totalAmount === undefined || store.totalAmount === null) {
+        return "0.00"; // Handle cases where totalAmount is null or undefined
+      }
+      return Number(store.totalAmount).toFixed(2);
+    });
+
+    const totalQuantity = computed(() => {
+      return store.products.reduce(
+        (total, item) => total + (item.quantity || 0),
+        0
+      );
+    });
+
+    return { store, formattedTotalAmount, totalQuantity };
   },
 };
 </script>

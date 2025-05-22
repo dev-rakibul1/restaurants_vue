@@ -13,3 +13,8 @@ svg {
   width: 20px;
   height: auto;
 }
+
+.card__del svg {
+  width: 15px;
+  height: auto;
+}

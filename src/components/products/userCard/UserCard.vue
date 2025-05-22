@@ -19,14 +19,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.user-card {
-  /* margin: 30px;
-  background: #000000;
-  color: white;
-  padding: 10px;
-  display: inline-block;
-  min-height: 70vh; */
-  /* width: 100%; */
-}
-</style>
+<style scoped></style>

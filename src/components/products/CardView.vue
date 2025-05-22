@@ -9,15 +9,20 @@
     <div class="product__header">
       <span class="product__year">{{ product.year }}</span>
       <h3 class="product__title text-xl md:text-2xl md:font-semibold">
-        {{ product.title }}
+        {{ product.price }} ₸
       </h3>
       <p class="product__des">{{ product.des }}</p>
     </div>
 
     <button
       class="add__button"
-      :disabled="product.status === false"
-      @click="$emit('add-to-cart')"
+      @click="handleAddToCard(product)"
+      :class="[
+        'w-full py-2 rounded-lg font-medium flex items-center justify-center',
+        product?.status && product?.isStock
+          ? 'bg-gray-100 text-gray-900 hover:bg-gray-200 cursor-pointer'
+          : 'bg-gray-300 text-gray-500 cursor-not-allowed',
+      ]"
     >
       <span class="card__plus" v-if="product.status">+</span>
       {{ product.status ? "Add" : "Out of Stock" }}
@@ -26,6 +31,10 @@
 </template>
 
 <script>
+import { useTaskStore } from "@/stores/taskStore";
+import { computed, onMounted } from "vue";
+//  :disabled="!product.status || !product?.isStock"
+
 export default {
   name: "ProductCard",
   props: {
@@ -35,10 +44,45 @@ export default {
       default: () => ({
         year: "1990T",
         title: "Краны Мастер Острый",
-        status: true, // default true
+        status: true,
       }),
     },
   },
+  setup() {
+    const store = useTaskStore();
+
+    console.log(store);
+
+    const handleAddToCard = (item) => {
+      store.addToProductCart(item);
+      console.log("Item added to products:", store.products); // Log in the action
+      console.log("Current Cart:", store.cart);
+    };
+
+    const productList = computed(() => store.products); // Create a computed property
+    const cartList = computed(() => store.cart);
+
+    onMounted(() => {
+      console.log("Initial Products on mount:", store.products);
+    });
+
+    return { store, handleAddToCard, productList, cartList };
+  },
+  methods: {
+    redirectToProduct(id) {
+      this.$router.push({ name: "CartDetails", params: { id } });
+    },
+  },
+
+  updateQuantity(change) {
+    const newQuantity = this.quantity + change;
+    if (newQuantity >= 1 && newQuantity <= this.maxQuantity) {
+      this.quantity = newQuantity;
+      this.$emit("update:quantity", newQuantity); // Emit event with new quantity
+    }
+  },
+
+  emits: ["update:quantity"],
 };
 </script>
 
