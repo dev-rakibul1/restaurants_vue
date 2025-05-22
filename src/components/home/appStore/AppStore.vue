@@ -1,7 +1,7 @@
 <template>
   <div
     class="w-full md:w-1/2 flex items-center flex-col"
-    style="margin-top: 50px"
+    style="margin-top: 150px"
   >
     <div class="flex flex-col">
       <h3 class="text-xl font-semibold mb-4">Even easier in the app</h3>

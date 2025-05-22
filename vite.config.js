@@ -7,10 +7,6 @@ import vueDevTools from "vite-plugin-vue-devtools";
 
 // https://vite.dev/config/
 export default defineConfig({
-  content: [
-    "./src/**/*.{html,js,ts,jsx,tsx,vue}", // Ensure your component files are scanned
-  ],
-  safelist: ["w-[60%]"],
   plugins: [
     vue(),
     vueDevTools(),
@@ -25,11 +21,6 @@ export default defineConfig({
     }),
   ],
 
-  css: {
-    postcss: {
-      plugins: [require("tailwindcss"), require("autoprefixer")],
-    },
-  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
