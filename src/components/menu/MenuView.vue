@@ -134,9 +134,12 @@
                     Русский
                   </li>
                   <li
-                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors duration-200"
+                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors duration-200 flex items-center w-full"
                   >
-                    English
+                    <div class="flex items-center justify-between">
+                      <p class="flex-1">English</p>
+                      <p class="text-xl">&#10003;</p>
+                    </div>
                   </li>
                   <li
                     class="px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors duration-200"
