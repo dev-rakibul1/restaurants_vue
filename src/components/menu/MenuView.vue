@@ -111,14 +111,59 @@
 
           <!-- Right section -->
           <div class="flex items-center gap-12">
-            <div class="flex items-center text-sm text-black gap-1 flex-col">
+            <div class="relative group mt-10">
+              <div
+                class="flex items-center text-sm text-black gap-1 flex-col cursor-pointer"
+              >
+                <img
+                  src="../../assets/images/world.png"
+                  alt="World"
+                  class="w-5 h-5"
+                />
+                <p>English</p>
+              </div>
+
+              <!-- Language Dropdown for Mobile -->
+              <div
+                class="language__dropdown mt-2 w-full bg-white rounded-2xl shadow-lg overflow-hidden"
+              >
+                <ul>
+                  <li
+                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors duration-200"
+                  >
+                    Русский
+                  </li>
+                  <li
+                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors duration-200"
+                  >
+                    English
+                  </li>
+                  <li
+                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors duration-200"
+                  >
+                    Қазақша
+                  </li>
+                  <li
+                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors duration-200"
+                  >
+                    O'zbek
+                  </li>
+                  <li
+                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer transition-colors duration-200"
+                  >
+                    Казак
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- <div class="flex items-center text-sm text-black gap-1 flex-col">
               <img
                 src="../../assets/images/world.png"
                 alt="World"
                 class="w-5 h-5"
               />
               <p>English</p>
-            </div>
+            </div> -->
             <button class="login__btn">Log in</button>
           </div>
         </div>
@@ -219,9 +264,9 @@
 </template>
 
 <script>
-import AddToCard from "../../addToCard/AddToCard.vue";
 import { useTaskStore } from "@/stores/taskStore";
 import { computed } from "vue";
+import AddToCard from "../../addToCard/AddToCard.vue";
 
 export default {
   name: "MenuView",
@@ -356,5 +401,72 @@ export default {
   width: 100%;
   height: 80px;
   background: #fff;
+}
+
+/* Add these to your existing styles */
+.group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.language__dropdown {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%);
+  transition: all 0.3s ease;
+  max-height: auto;
+  min-width: 200px;
+  position: absolute;
+  top: 0;
+  left: -100%;
+  transform: translateY(15%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  border: 1px solid #ddd;
+}
+
+.language__dropdown ul {
+  width: 100%;
+  max-width: 100%;
+}
+.language__dropdown ul li {
+  margin-top: 10px;
+  width: 100%;
+  max-width: 100%;
+  display: block;
+  padding: 10px;
+  transition: all 0.3s;
+  color: #424242;
+}
+.language__dropdown ul li:hover {
+  background: #ebebeb;
+}
+
+.language__dropdown ul li:first-child {
+  margin-top: 0px;
+}
+
+.group:hover .language__dropdown,
+.group:focus-within .language__dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(45px);
+}
+
+/* For mobile menu */
+@media (max-width: 1023px) {
+  .language__dropdown {
+    position: static;
+    transform: none;
+    width: 100%;
+  }
+
+  .group:hover .language__dropdown,
+  .group:focus-within .language__dropdown {
+    transform: none;
+  }
 }
 </style>
