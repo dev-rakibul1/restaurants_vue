@@ -343,6 +343,9 @@ export default {
   padding: 5px 5px 5px 39px;
   width: 100%;
 }
+.search__input img {
+  opacity: 0.7;
+}
 .search__icon {
   position: absolute;
   left: 12px;
