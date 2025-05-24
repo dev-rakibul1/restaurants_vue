@@ -1,6 +1,11 @@
 <template>
   <div style="padding-top: 80px">
-    <h2 class="font-semibold text-2xl md:text-3xl">Боксы</h2>
+    <h2
+      v-if="filteredProducts && filteredProducts.length"
+      class="font-semibold text-2xl md:text-3xl"
+    >
+      Новинки
+    </h2>
 
     <!-- Loading state -->
     <div v-if="loading" class="text-gray-500 mt-4">Loading...</div>
@@ -40,6 +45,7 @@ const GET_PRODUCTS = gql`
       image
       category
       status
+      des
     }
   }
 `;
