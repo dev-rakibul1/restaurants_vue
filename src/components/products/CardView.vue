@@ -1,40 +1,55 @@
 <template>
-  <div
-    class="product__card"
-    :class="{ 'opacity-50 pointer-events-none': product.status === false }"
-  >
-    <div>
-      <img :src="product.image" alt="" />
-    </div>
-    <div class="product__header">
-      <span class="product__year">{{ product.year }}</span>
-      <h3 class="product__title text-xl md:text-2xl md:font-semibold">
-        {{ product.price }} ₸
-      </h3>
-      <p class="product__des">{{ product.des }}</p>
-    </div>
+  <div>
+    <!-- ✅ Toast Notification -->
+    <transition name="toast-fade">
+      <div
+        v-if="messageShown"
+        class="fixed p-5 top-4 left-1/2 transform -translate-x-1/2 bg-green-100 px-4 py-2 rounded shadow-lg z-50"
+      >
+        <div class="flex items-center justify-start">
+          <img src="../../assets/images/circle.png" class="w-4 h-4" alt="" />
+          <p style="margin-left: 10px">Added to cart!</p>
+        </div>
+      </div>
+    </transition>
 
-    <button
-      class="add__button"
-      @click="handleAddToCard(product)"
-      :disabled="!product.status"
-      :class="[
-        'w-full py-2 rounded-lg font-medium flex items-center justify-center',
-        product?.status && product?.isStock
-          ? 'bg-gray-100 text-gray-900 hover:bg-gray-200 cursor-pointer'
-          : 'bg-gray-300 text-gray-500 cursor-not-allowed',
-      ]"
+    <!-- 🛒 Product Card -->
+    <div
+      class="product__card"
+      :class="{ 'opacity-50 pointer-events-none': product.status === false }"
     >
-      <span class="card__plus" v-if="product.status">+</span>
-      {{ product.status ? "Add" : "Out of Stock" }}
-    </button>
+      <div>
+        <img :src="product.image" alt="" />
+      </div>
+      <div class="product__header">
+        <span class="product__year">{{ product.year }}</span>
+        <h3 class="product__title text-xl md:text-2xl md:font-semibold">
+          {{ product.price }} ₸
+        </h3>
+        <p class="product__des">{{ product.des }}</p>
+      </div>
+
+      <button
+        class="add__button"
+        @click="handleAddToCard(product)"
+        :disabled="!product.status"
+        :class="[
+          'w-full py-2 rounded-lg font-medium flex items-center justify-center',
+          product?.status && product?.isStock
+            ? 'bg-gray-100 text-gray-900 hover:bg-gray-200 cursor-pointer'
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed',
+        ]"
+      >
+        <span class="card__plus" v-if="product.status">+</span>
+        {{ product.status ? "Add" : "Out of Stock" }}
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
 import { useTaskStore } from "@/stores/taskStore";
-import { computed, onMounted } from "vue";
-//  :disabled="!product.status || !product?.isStock"
+import { computed, nextTick, onMounted, ref } from "vue";
 
 export default {
   name: "ProductCard",
@@ -51,11 +66,9 @@ export default {
   },
   setup() {
     const store = useTaskStore();
+    const messageShown = ref(false);
 
-    // console.log(store);
-
-    // -------------------Set localStorage--------------------
-    const handleAddToCard = (item) => {
+    const handleAddToCard = async (item) => {
       if (!item?.id) {
         console.error("Product must have a unique ID!");
         return;
@@ -68,53 +81,43 @@ export default {
       );
 
       if (existingProductIndex >= 0) {
-        // Update quantity only
         currentCart[existingProductIndex].quantity += 1;
       } else {
-        // Add new product with quantity = 1
         currentCart.push({
           ...item,
           quantity: 1,
         });
       }
 
-      // Save back to localStorage
       localStorage.setItem("cart", JSON.stringify(currentCart));
-
-      // Update store with new cart data (to keep it reactive)
       store.initializeCart(currentCart);
 
-      // console.log("Updated cart:", currentCart);
+      // ✅ Show toast message
+      messageShown.value = true;
+
+      await nextTick();
+      setTimeout(() => {
+        messageShown.value = false;
+      }, 2000);
     };
 
-    const productList = computed(() => store.products); // Create a computed property
+    const productList = computed(() => store.products);
     const cartList = computed(() => store.cart);
 
     onMounted(() => {
-      // Load cart from localStorage on component mount
       const savedCart = localStorage.getItem("cart");
       if (savedCart) {
         store.initializeCart(JSON.parse(savedCart));
       }
-      // console.log("Initial Products on mount:", store.products);
     });
 
-    return { store, handleAddToCard, productList, cartList };
+    return { store, handleAddToCard, productList, cartList, messageShown };
   },
   methods: {
     redirectToProduct(id) {
       this.$router.push({ name: "CartDetails", params: { id } });
     },
   },
-
-  updateQuantity(change) {
-    const newQuantity = this.quantity + change;
-    if (newQuantity >= 1 && newQuantity <= this.maxQuantity) {
-      this.quantity = newQuantity;
-      this.$emit("update:quantity", newQuantity); // Emit event with new quantity
-    }
-  },
-
   emits: ["update:quantity"],
 };
 </script>
@@ -166,5 +169,21 @@ export default {
 
 .card__plus {
   font-size: 20px;
+}
+
+/* ✅ Toast Animation */
+.toast-fade-enter-active,
+.toast-fade-leave-active {
+  transition: opacity 0.5s, transform 0.5s;
+}
+.toast-fade-enter-from,
+.toast-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+.toast-fade-enter-to,
+.toast-fade-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>
