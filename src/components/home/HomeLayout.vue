@@ -107,7 +107,7 @@
             <!-- Display cart items -->
 
             <div
-              v-if="store.products.length === 0"
+              v-if="localCart.length === 0"
               class="flex items-center justify-center"
               style="height: 20vh"
             >
@@ -115,7 +115,7 @@
             </div>
             <div v-else>
               <AddToCard
-                v-for="product in store.products"
+                v-for="product in localCart"
                 :key="product.id"
                 :product="product"
               />
@@ -145,23 +145,23 @@
 </template>
 
 <script>
-import CategoryOneView from "../products/categories/CateOneView.vue";
-import CategoryFourView from "../products/categories/CateFourView.vue";
-import CategoryFiveView from "../products/categories/CateFiveView.vue";
-import CategoryThreeView from "../products/categories/CateThreeView.vue";
-import CategorySixView from "../products/categories/CateSixView.vue";
-import CategorySevenView from "../products/categories/CateSevenView.vue";
+import { computed, onMounted, ref, watch } from "vue";
+import AddToCard from "../../addToCard/AddToCard.vue";
 import CategoryEightView from "../products/categories/CateEightView.vue";
+import CategoryFiveView from "../products/categories/CateFiveView.vue";
+import CategoryFourView from "../products/categories/CateFourView.vue";
 import CategoryNineView from "../products/categories/CateNineView.vue";
+import CategoryOneView from "../products/categories/CateOneView.vue";
+import CategorySevenView from "../products/categories/CateSevenView.vue";
+import CategorySixView from "../products/categories/CateSixView.vue";
+import CategoryTenView from "../products/categories/CateTenView.vue";
+import CategoryThreeView from "../products/categories/CateThreeView.vue";
 import CategoryTwoView from "../products/categories/CateTwoView.vue";
 import FreeDelivery from "../products/categories/FreeDelivery.vue";
-import CategoryTenView from "../products/categories/CateTenView.vue";
 import UserCard from "../products/userCard/UserCard.vue";
 import HomeTopBanner from "./homeTopBanner/HomeTopBanner.vue";
-import AddToCard from "../../addToCard/AddToCard.vue";
 
 import { useTaskStore } from "@/stores/taskStore";
-import { computed } from "vue";
 // import AddCard from "../addCard/AddCard.vue";
 
 export default {
@@ -188,13 +188,49 @@ export default {
     };
   },
 
+  // setup() {
+  //   const store = useTaskStore();
+  //   const formattedTotalAmount = computed(() => {
+  //     if (store.totalAmount === undefined || store.totalAmount === null) {
+  //       return "0.00"; // Handle cases where totalAmount is null or undefined
+  //     }
+  //     return Number(store.totalAmount).toFixed(2);
+  //   });
+
+  //   const totalQuantity = computed(() => {
+  //     return store.products.reduce(
+  //       (total, item) => total + (item.quantity || 0),
+  //       0
+  //     );
+  //   });
+
+  //   // localstore set data
+  //   const cartInit = localStorage.getItem("cart");
+  //   const localCart = JSON.parse(cartInit);
+
+  //   console.log("cart init", localCart);
+
+  //   return { store, formattedTotalAmount, totalQuantity };
+  // },
+
   setup() {
     const store = useTaskStore();
-    const formattedTotalAmount = computed(() => {
-      if (store.totalAmount === undefined || store.totalAmount === null) {
-        return "0.00"; // Handle cases where totalAmount is null or undefined
+    const localCart = ref([]);
+
+    onMounted(() => {
+      const cartInit = localStorage.getItem("cart");
+      if (cartInit) {
+        try {
+          localCart.value = JSON.parse(cartInit);
+        } catch (error) {
+          console.error("Error parsing localStorage cart:", error);
+          localCart.value = [];
+        }
       }
-      return Number(store.totalAmount).toFixed(2);
+    });
+
+    const formattedTotalAmount = computed(() => {
+      return Number(store.totalAmount || 0).toFixed(2);
     });
 
     const totalQuantity = computed(() => {
@@ -204,7 +240,16 @@ export default {
       );
     });
 
-    return { store, formattedTotalAmount, totalQuantity };
+    watch(
+      () => store.products,
+      (newVal) => {
+        localStorage.setItem("cart", JSON.stringify(newVal));
+        localCart.value = newVal;
+      },
+      { deep: true }
+    );
+
+    return { store, formattedTotalAmount, totalQuantity, localCart };
   },
 };
 </script>

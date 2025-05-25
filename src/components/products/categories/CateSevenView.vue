@@ -56,7 +56,7 @@ const { result, loading, error } = useQuery(GET_PRODUCTS);
 // Log when data is received
 watchEffect(() => {
   if (result.value) {
-    console.log("Fetched products:", result.value.products);
+    // console.log("Fetched products:", result.value.products);
   }
 });
 

@@ -52,19 +52,51 @@ export default {
   setup() {
     const store = useTaskStore();
 
-    console.log(store);
+    // console.log(store);
 
+    // -------------------Set localStorage--------------------
     const handleAddToCard = (item) => {
-      store.addToProductCart(item);
-      console.log("Item added to products:", store.products); // Log in the action
-      console.log("Current Cart:", store.cart);
+      if (!item?.id) {
+        console.error("Product must have a unique ID!");
+        return;
+      }
+
+      const currentCart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      const existingProductIndex = currentCart.findIndex(
+        (p) => p.id === item.id
+      );
+
+      if (existingProductIndex >= 0) {
+        // Update quantity only
+        currentCart[existingProductIndex].quantity += 1;
+      } else {
+        // Add new product with quantity = 1
+        currentCart.push({
+          ...item,
+          quantity: 1,
+        });
+      }
+
+      // Save back to localStorage
+      localStorage.setItem("cart", JSON.stringify(currentCart));
+
+      // Update store with new cart data (to keep it reactive)
+      store.initializeCart(currentCart);
+
+      // console.log("Updated cart:", currentCart);
     };
 
     const productList = computed(() => store.products); // Create a computed property
     const cartList = computed(() => store.cart);
 
     onMounted(() => {
-      console.log("Initial Products on mount:", store.products);
+      // Load cart from localStorage on component mount
+      const savedCart = localStorage.getItem("cart");
+      if (savedCart) {
+        store.initializeCart(JSON.parse(savedCart));
+      }
+      // console.log("Initial Products on mount:", store.products);
     });
 
     return { store, handleAddToCard, productList, cartList };
